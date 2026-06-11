@@ -24,28 +24,25 @@ jobs:
     - name: Create gradle/wrapper directory
       run: mkdir -p gradle/wrapper
 
-    - name: Download Gradle Distribution
+    - name: Download gradle-wrapper.jar directly from Gradle GitHub
       run: |
         cd gradle/wrapper
-        echo "Downloading Gradle 8.5..."
-        curl -L -o gradle-8.5-bin.zip https://services.gradle.org/distributions/gradle-8.5-bin.zip
-        echo "Extracting Gradle..."
-        unzip -q gradle-8.5-bin.zip
-        echo "Files in extracted directory:"
-        find gradle-8.5 -name "gradle-wrapper.jar" -type f
-        echo "Copying gradle-wrapper.jar..."
-        cp gradle-8.5/lib/gradle-wrapper.jar .
-        echo "Cleaning up..."
-        rm -rf gradle-8.5 gradle-8.5-bin.zip
-        echo "Verifying gradle-wrapper.jar..."
+        echo "Downloading gradle-wrapper.jar from official Gradle repository..."
+        curl -L -o gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.5/gradle/wrapper/gradle-wrapper.jar
+        echo "Verifying download..."
         ls -lh gradle-wrapper.jar
+        file gradle-wrapper.jar
         cd ../..
 
-    - name: Verify gradle-wrapper.jar exists
+    - name: Verify gradle-wrapper.jar exists and is valid
       run: |
         if [ -f gradle/wrapper/gradle-wrapper.jar ]; then
-          echo "✓ gradle-wrapper.jar found"
-          ls -lh gradle/wrapper/gradle-wrapper.jar
+          SIZE=$(stat -c%s gradle/wrapper/gradle-wrapper.jar)
+          echo "✓ gradle-wrapper.jar found (Size: $SIZE bytes)"
+          if [ $SIZE -lt 100000 ]; then
+            echo "✗ Error: File size is too small, download may have failed"
+            exit 1
+          fi
         else
           echo "✗ gradle-wrapper.jar NOT found"
           exit 1
