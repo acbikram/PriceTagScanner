@@ -17,12 +17,13 @@ jobs:
     - name: Create gradle/wrapper directory
       run: mkdir -p gradle/wrapper
 
-    - name: Download Gradle Wrapper JAR
+    - name: Download and Extract Gradle Wrapper JAR
       run: |
         cd gradle/wrapper
         curl -L -o gradle-8.5-bin.zip https://services.gradle.org/distributions/gradle-8.5-bin.zip
-        unzip -j gradle-8.5-bin.zip gradle-8.5/lib/gradle-wrapper.jar
-        rm gradle-8.5-bin.zip
+        unzip gradle-8.5-bin.zip
+        mv gradle-8.5/lib/gradle-wrapper.jar .
+        rm -rf gradle-8.5 gradle-8.5-bin.zip
         cd ../..
 
     - name: Verify gradle-wrapper.jar exists
