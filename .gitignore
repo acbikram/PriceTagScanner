@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+local.properties
+.DS_Store
+
+# APKs / bundles
+*.apk
+*.aab
+
+# Keystore (NEVER commit)
+*.jks
+*.keystore
+
+# Generated
+app/schemas/
